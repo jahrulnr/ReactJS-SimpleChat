@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="id">
+  <head>
+    <meta charset="utf-8" />
+    <link rel="icon" href="%PUBLIC_URL%/favicon.ico" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="description"
+      content="Web site created using create-react-app"/>
+    <link rel="manifest" href="%PUBLIC_URL%/manifest.json" />
+    <title>React App</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" integrity="sha512-iecdLmaskl7CVkqkXNQ/ZH/XLlvWZOJyj7Yy7tcenmpD1ypASozpmT/E0iPtmFIB46ZmdtAc9eNBvH0H/ZpiBw==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+  </head>
+  <body>
+    <noscript>You need to enable JavaScript to run this app.</noscript>
+    <div id="app"></div>
+    <div id="loader" class="fade show">
+      <style>
+        body {margin: 0; padding: 0;}
+        #loader {background-color:#0e0e0e !important; width: 100%; margin: 0;}
+        #loader {height: 100%; position: fixed; top: 0;}
+        #loader .load-container {height: 100%; width: 100%; position: absolute; top: 50%;}
+        #loader .loader {position:relative;width:65px;border:1px solid transparent;margin:40px auto}
+        #loader .loader span{position:absolute;bottom:0;display:block;width:9px;height:5px;border-radius:5px;background:rgba(0,0,0,.1);-webkit-animation:preloader 2s infinite ease-in-out;animation:preloader 2s infinite ease-in-out}
+        #loader .loader span:nth-child(2){left:11px;-webkit-animation-delay:.2s;animation-delay:.2s}
+        #loader .loader span:nth-child(3){left:22px;-webkit-animation-delay:.4s;animation-delay:.4s}
+        #loader .loader span:nth-child(4){left:33px;-webkit-animation-delay:.6s;animation-delay:.6s}
+        #loader .loader span:nth-child(5){left:44px;-webkit-animation-delay:.8s;animation-delay:.8s}
+        #loader .loader span:nth-child(6){left:55px;-webkit-animation-delay:1s;animation-delay:1s}
+        @-webkit-keyframes preloader{
+          0%,100%,50%{height:5px;-webkit-transform:translateY(0);transform:translateY(0);background:rgba(0,0,0,.1)}
+          25%{height:30px;-webkit-transform:translateY(15px);transform:translateY(15px);background:#f8990c}
+        }
+        @keyframes preloader{
+          0%,100%,50%{height:5px;-webkit-transform:translateY(0);transform:translateY(0);background:rgba(0,0,0,.1)}
+          25%{height:30px;-webkit-transform:translateY(15px);transform:translateY(15px);background:#f8990c}
+        }
+      </style>
+      <div class="load-container">
+        <div class="loader">
+          <span></span>
+          <span></span>
+          <span></span>
+          <span></span>
+          <span></span>
+          <span></span>
+        </div>
+      </div>
+    </div>
+  </body>
+  <script src="https://code.jquery.com/jquery-3.7.0.min.js" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+  <script src="%PUBLIC_URL%/assets/js/app.js" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+</html>
