@@ -1,14 +1,10 @@
 class UrlHelper {
-  fullPath = () => {
+  pathName = () => {
     return window.location.pathname
   }
 
-  currentPath = () => {
-    return this.fullPath().substring(1)
-  }
-
   parsedPath = () => {
-    return this.currentPath().split('/')
+    return this.pathName().substring(1).split('/')
   }
 }
 

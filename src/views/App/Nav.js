@@ -10,7 +10,10 @@ const Nav = ({ show = false, callback }) => {
     {
       label: "Home",
       icon: "fa-solid fa-home",
-      command: () => navigate(RoutePath.HOME),
+      command: () => {
+        navigate(RoutePath.HOME)
+        callback(false)
+      },
     },
   ]
 

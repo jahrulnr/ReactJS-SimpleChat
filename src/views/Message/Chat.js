@@ -31,8 +31,12 @@ function Chat() {
         if (err.toJSON) {
           var errJson = err.toJSON()
           console.error(errJson)
-          if (errJson.code === "ERR_BAD_REQUEST") {
+          if (errJson.status === 403) {
             toast.current.show({ severity: 'warn', detail: 'Sesi anda telah habis' })
+            setTimeout(() => window.location.href = RoutePath.HOME, 2000)
+          }
+          else if (errJson.status === 400) {
+            toast.current.show({ severity: 'warn', detail: 'Teman tidak ditemukan' })
             setTimeout(() => window.location.href = RoutePath.HOME, 2000)
           }
           else {
@@ -89,8 +93,14 @@ function Chat() {
         if (err.toJSON) {
           var errJson = err.toJSON()
           console.error(errJson)
-          if (errJson.code === "ERR_BAD_REQUEST") {
+          if (errJson.status === 403) {
             toast.current.show({ severity: 'error', detail: 'Sesi anda telah habis' })
+            setTimeout(() => window.location.href = RoutePath.HOME, 2000)
+          }
+          else if (errJson.status === 400) {
+            toast.current.show({
+              severity: 'error', detail: 'Teman tidak ditemukans'
+            })
             setTimeout(() => window.location.href = RoutePath.HOME, 2000)
           }
           else {
@@ -140,8 +150,14 @@ function Chat() {
       .catch((err) => {
         if (err.toJSON) {
           var errJson = err.toJSON()
-          if (errJson.code === "ERR_BAD_REQUEST") {
+          if (errJson.status === 403) {
             toast.current.show({ severity: 'error', detail: 'Sesi anda telah habis' })
+            setTimeout(() => window.location.href = RoutePath.HOME, 2000)
+          }
+          else if (errJson.status === 400) {
+            toast.current.show({
+              severity: 'error', detail: 'Teman tidak ditemukans'
+            })
             setTimeout(() => window.location.href = RoutePath.HOME, 2000)
           }
           console.error(errJson)
@@ -153,7 +169,8 @@ function Chat() {
 
   const [message, setMessage] = useState('')
   const [disableButton, setDisableButton] = useState(true)
-  const sendMessage = () => {
+  const sendMessage = (e) => {
+    e.preventDefault()
     if (message.length > 0) {
       setDisableButton(true)
       axios({
@@ -182,19 +199,21 @@ function Chat() {
   }
 
   useEffect(() => {
-    if (firstLoad === true) {
-      setFirstLoad(false)
-      getFriendData()
-      getChat()
-      getFriends()
-    }
+    setTimeout(() => {
+      if (firstLoad === true) {
+        setFirstLoad(false)
+        getFriendData()
+        getChat()
+        getFriends()
+      }
+    }, 100)
     const interval = setInterval(() => {
       getChat()
       getFriends()
     }, 1000 * 5)
 
     return () => { clearInterval(interval) }
-  }, [firstLoad, chat, friendData, friends])
+  }, [])
 
   return (
     <div className='row'>
@@ -211,16 +230,16 @@ function Chat() {
             </ul>
           </div>
           <div className="card-footer bg-primary">
-            <div className='d-flex'>
+            <form className='d-flex' method='post' onSubmit={sendMessage}>
               <div className='w-100 me-2'>
                 <input type='text' value={message} onChange={(e) => handleMessage(e.target.value)} className='form-control' />
               </div>
               <div className='col-auto'>
-                <button className='btn btn-success' onClick={sendMessage} disabled={disableButton} >
+                <button type='submit' className='btn btn-success' disabled={disableButton} >
                   <i className="fa-solid fa-paper-plane"></i>
                 </button>
               </div>
-            </div>
+            </form>
           </div>
         </div>
       </div>
