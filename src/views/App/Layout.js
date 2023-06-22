@@ -1,30 +1,29 @@
-import React, { useState } from "react"
+import React, { useEffect, useState } from "react"
 import { isMobile } from "react-device-detect";
-import { Sidebar } from 'primereact/sidebar';
 import Nav from "./Nav"
 import { Auth } from "../../services/cookie"
 
-function Layout({children}) {
-
-  const [showNav, setShowNav] = useState(!isMobile)
+function Layout({ children }) {
+  const [showNav, setNav] = useState(false)
+  const navUpdate = (show) => {
+    setNav(show)
+  }
 
   const Logout = (e) => {
     Auth().remove()
 
-    setTimeout(() => {window.location.reload()}, 1000)
+    setTimeout(() => { window.location.reload() }, 1000)
   }
 
   return (
     <div className="wrapper">
 
       <div className="card bg-dark">
-        <Sidebar visible={showNav} onHide={() => setShowNav(false)}>
-          <Nav />
-        </Sidebar>
+        <Nav show={showNav} callback={navUpdate} />
       </div>
       <div className="main">
         <nav className="navbar navbar-expand navbar-light navbar-bg">
-          <a className="sidebar-toggle" onClick={() => setShowNav(true)} href={undefined}>
+          <a className="sidebar-toggle" onClick={() => setNav(true)} href={undefined}>
             <i className="hamburger align-self-center"></i>
           </a>
 

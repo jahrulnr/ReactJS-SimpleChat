@@ -1,25 +1,40 @@
-import { Outlet, Link, useNavigate } from "react-router-dom";
+import { Outlet, useNavigate } from "react-router-dom";
 import { RoutePath } from "../../route/route";
-import { PanelMenu } from "primereact/panelmenu";
+import { TieredMenu } from "primereact/tieredmenu";
+import { isMobile } from "react-device-detect";
+import { Sidebar } from 'primereact/sidebar';
+import { TabMenu } from 'primereact/tabmenu';
+import { useState } from "react";
 
-const Nav = () => {
+const Nav = ({ show = false, callback }) => {
+  console.log(show)
   const navigate = useNavigate();
+  const [activeIndex, setActiveIndex] = useState(0)
 
-  return (
-    <>
-      <PanelMenu
-        model={[
-          {
-            label: "Home",
-            icon: "fa-solid fa-home",
-            command: () => navigate(RoutePath.HOME),
-          },
-        ]}
-      />
+  const items = [
+    {
+      label: "Home",
+      icon: "fa-solid fa-home",
+      command: () => navigate(RoutePath.HOME),
+    },
+  ]
 
-      <Outlet />
-    </>
-  );
+  return !isMobile
+    ? (
+      <Sidebar visible={show} onHide={() => callback(false)}>
+        <TieredMenu
+          className="w-100"
+          model={items}
+        />
+
+        <Outlet />
+      </Sidebar>
+    )
+    : (
+      <>
+        <TabMenu model={items} activeIndex={activeIndex} onTabChange={(e) => setActiveIndex(e.index)} />
+      </>
+    )
 };
 
 export default Nav;
