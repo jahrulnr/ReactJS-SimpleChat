@@ -1,5 +1,6 @@
 import React from 'react';
 import ReactDOM from 'react-dom/client';
+import { BrowserRouter } from 'react-router-dom';
 import { Offline, Online } from 'react-detect-offline';
 import { default as OffPage } from './views/Offline'
 import App from './route/route';
@@ -13,12 +14,14 @@ import './assets/css/app.css'
 const root = ReactDOM.createRoot(document.getElementById('app'));
 
 root.render(
-  <>
+  <React.StrictMode>
     <Online>
-      <App />
+      <BrowserRouter future={{ v7_startTransition: true }}>
+        <App />
+      </BrowserRouter>
     </Online>
     <Offline>
       <OffPage />
     </Offline>
-  </>
+  </React.StrictMode>
 );

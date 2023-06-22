@@ -5,10 +5,12 @@ import { AccessToken, Auth } from '../services/cookie'
 import page from '../services/page'
 import apiConfig from '../config/api'
 import logo from '../assets/reactjs.png'
+import { useNavigate } from 'react-router';
 
 function Login() {
   new page().setTitle("Login")
   const toast = useRef(null);
+  const navigate = useNavigate()
 
   const [dataForm, setDataForm] = useState({})
   const [email, setEmail] = useState('')
@@ -35,7 +37,9 @@ function Login() {
 
       toast.current.show({ severity: 'success', detail: `Selamat Datang ${Auth().get().name}! Mengalihkan halaman ...` });
 
-      setTimeout(() => window.location.reload(), 2000)
+      setTimeout(() => {
+        navigate(0)
+      }, 2000)
     }).catch((err) => {
       const errJson = err.toJSON()
       if (errJson.status === 500) {
@@ -58,7 +62,7 @@ function Login() {
               <div className="text-center mt-4">
                 <img src={logo} className='col-6' alt='Logo' />
                 <p className="lead">
-                  Sign in to your account to continue
+                  Silakan Login
                 </p>
               </div>
 

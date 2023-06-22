@@ -1,5 +1,5 @@
 
-import { BrowserRouter, Routes, Route } from "react-router-dom";
+import { Routes, Route } from "react-router-dom";
 import { Auth } from '../services/cookie'
 import Layout from "../views/App/Layout";
 import Login from "../views/Login";
@@ -23,14 +23,12 @@ function App() {
     return <Login />
 
   return (
-    <BrowserRouter future={{ v7_startTransition: true }}>
-      <Routes>
-        <Route path={RoutePath.HOME}>
-          <Route index element={<Layout><Message /></Layout>} />
-          <Route path={RoutePath.CHAT + '/*'} element={<Layout><Chat /></Layout>} />
-        </Route>
-      </Routes>
-    </BrowserRouter>
+    <Routes>
+      <Route path={RoutePath.HOME}>
+        <Route index element={<Layout><Message /></Layout>} />
+        <Route path={RoutePath.CHAT + '/*'} element={<Layout><Chat /></Layout>} />
+      </Route>
+    </Routes>
   );
 }
 
