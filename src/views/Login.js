@@ -1,6 +1,6 @@
 import axios from 'axios'
-import toastr from 'reactjs-toastr/lib/react-toast'
-import { useEffect, useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
+import { Toast } from 'primereact/toast';
 import { AccessToken, Auth } from '../services/cookie'
 import page from '../services/page'
 import apiConfig from '../config/api'
@@ -8,6 +8,7 @@ import logo from '../assets/reactjs.png'
 
 function Login() {
   new page().setTitle("Login")
+  const toast = useRef(null);
 
   const [dataForm, setDataForm] = useState({})
   const [email, setEmail] = useState('')
@@ -22,39 +23,40 @@ function Login() {
 
   const doLogin = async (form) => {
     form.preventDefault()
-  
-    const resp = await axios({
+
+    axios({
       method: 'post',
       url: apiConfig.LOGIN,
       responseType: 'json',
       data: dataForm,
-    })
-
-    if(resp.status === 200){
+    }).then((resp) => {
       AccessToken().set(resp.data.token)
       Auth().set(resp.data)
 
-      toastr.success(`Selamat Datang ${Auth().get().name}! Mengalihkan halaman ...`)
+      toast.current.show({ severity: 'success', detail: `Selamat Datang ${Auth().get().name}! Mengalihkan halaman ...` });
 
       setTimeout(() => window.location.reload(), 2000)
-    }
-    else if(resp.status === 500) {
-      toastr.error(`Server bermasalah`)
-    }
-    else if(resp.status !== 204 && resp.status !== 500) {
-      toastr.error(`Email/Password tidak benar`)
-    }
+    }).catch((err) => {
+      const errJson = err.toJSON()
+      if (errJson.status === 500) {
+        toast.current.show({ severity: 'error', detail: 'Server sedang bermasalah' });
+      }
+      else if (errJson.status !== 204 && errJson.status !== 500) {
+        toast.current.show({ severity: 'warn', detail: 'Email/Password tidak benar' });
+      }
+    })
   }
 
   return (
     <main className="d-flex w-100 h-100">
+      <Toast ref={toast} />
       <div className="container d-flex flex-column">
         <div className="row vh-100">
           <div className="col-sm-10 col-md-8 col-lg-6 col-xl-5 mx-auto d-table h-100">
             <div className="d-table-cell align-middle">
 
               <div className="text-center mt-4">
-                <img src={logo} className='col-6' alt='Logo'/>
+                <img src={logo} className='col-6' alt='Logo' />
                 <p className="lead">
                   Sign in to your account to continue
                 </p>
@@ -83,7 +85,7 @@ function Login() {
           </div>
         </div>
       </div>
-    </main> 
+    </main>
   );
 }
 

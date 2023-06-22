@@ -1,7 +1,7 @@
 import React, { useState } from "react"
 import Nav from "./Nav"
 import { Auth } from "../../services/cookie"
-import { Link } from "react-router-dom"
+import { RoutePath } from "../../route/route"
 
 function Layout({ children }) {
   const [showNav, setNav] = useState(false)
@@ -12,7 +12,7 @@ function Layout({ children }) {
   const Logout = (e) => {
     Auth().remove()
 
-    setTimeout(() => { window.location.reload() }, 1000)
+    setTimeout(() => { window.location.href = RoutePath.HOME }, 500)
   }
 
   return (

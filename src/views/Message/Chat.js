@@ -1,16 +1,17 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { AccessToken, Auth } from '../../services/cookie';
 import page, { ScrollToBottom } from '../../services/page'
 import axios from 'axios';
 import apiConfig from '../../config/api';
-import toastr from 'reactjs-toastr/lib/react-toast';
 import url from '../../services/url'
 import Friend from '../../models/friend';
 import { default as ChatModel } from '../../models/message'
 import { RoutePath } from '../../route/route';
+import { Toast } from 'primereact/toast';
 
 function Chat() {
   new page().setTitle("Pesan")
+  const toast = useRef(null)
 
   const friend_id = url.parsedPath()[1] ?? false
   const [firstLoad, setFirstLoad] = useState(true)
@@ -29,14 +30,21 @@ function Chat() {
       .catch((err) => {
         if (err.toJSON) {
           var errJson = err.toJSON()
+          console.error(errJson)
           if (errJson.code === "ERR_BAD_REQUEST") {
-            toastr.error("Sesi anda telah habis")
+            toast.current.show({ severity: 'warn', detail: 'Sesi anda telah habis' })
             setTimeout(() => window.location.href = RoutePath.HOME, 2000)
           }
-          console.error(errJson)
+          else {
+            toast.current.show({ severity: 'error', detail: 'Server mengalami masalah' })
+            setTimeout(() => window.location.href = RoutePath.HOME, 1000)
+          }
         }
-        else
+        else {
           console.error(err.message)
+          toast.current.show({ severity: 'error', detail: 'Server mengalami masalah' })
+          setTimeout(() => window.location.href = RoutePath.HOME, 1000)
+        }
       })
   }
 
@@ -80,14 +88,21 @@ function Chat() {
       .catch((err) => {
         if (err.toJSON) {
           var errJson = err.toJSON()
+          console.error(errJson)
           if (errJson.code === "ERR_BAD_REQUEST") {
-            toastr.error("Sesi anda telah habis")
+            toast.current.show({ severity: 'error', detail: 'Sesi anda telah habis' })
             setTimeout(() => window.location.href = RoutePath.HOME, 2000)
           }
-          console.error(errJson)
+          else {
+            toast.current.show({ severity: 'error', detail: 'Server mengalami masalah' })
+            setTimeout(() => window.location.href = RoutePath.HOME, 1000)
+          }
         }
-        else
+        else {
           console.error(err.message)
+          toast.current.show({ severity: 'error', detail: 'Server mengalami masalah' })
+          setTimeout(() => window.location.href = RoutePath.HOME, 1000)
+        }
       })
   }
 
@@ -126,7 +141,7 @@ function Chat() {
         if (err.toJSON) {
           var errJson = err.toJSON()
           if (errJson.code === "ERR_BAD_REQUEST") {
-            toastr.error("Sesi anda telah habis")
+            toast.current.show({ severity: 'error', detail: 'Sesi anda telah habis' })
             setTimeout(() => window.location.href = RoutePath.HOME, 2000)
           }
           console.error(errJson)
@@ -183,6 +198,7 @@ function Chat() {
 
   return (
     <div className='row'>
+      <Toast ref={toast} />
       <div className='col-12 col-md-7'>
         <div className='card shadow-lg'>
           <div className='card-body'>

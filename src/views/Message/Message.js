@@ -1,14 +1,15 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { AccessToken } from '../../services/cookie';
 import page from '../../services/page'
 import axios from 'axios';
 import apiConfig from '../../config/api';
-import toastr from 'reactjs-toastr/lib/react-toast';
 import { Link } from 'react-router-dom';
 import { RoutePath } from '../../route/route';
+import { Toast } from 'primereact/toast';
 
 function Message() {
   new page().setTitle("Pesan")
+  const toast = useRef(null)
 
   const [firstLoad, setFirstLoad] = useState(true)
   const [messages, setMessages] = useState(
@@ -20,21 +21,21 @@ function Message() {
     </>
   )
 
-  const getMessages = function() {
+  const getMessages = function () {
     return axios.get(apiConfig.MESSAGES, { headers: AccessToken().get() })
       .then((resp) => {
-        if(resp.data.length > 0)
+        if (resp.data.length > 0)
           setMessages(
             <>
-            {resp.data.map(data => (
-              <Link key={data.user_id} className="list-group-item" to={RoutePath.CHAT+'/'+data.user_id}>
-                {data.name}
-                <div className={data.readed === "0" ? 'fw-bold': ''}>{data.text}</div>
-              </Link>
-            ))}
+              {resp.data.map(data => (
+                <Link key={data.user_id} className="list-group-item" to={RoutePath.CHAT + '/' + data.user_id}>
+                  {data.name}
+                  <div className={data.readed === "0" ? 'fw-bold' : ''}>{data.text}</div>
+                </Link>
+              ))}
             </>
           )
-        else 
+        else
           setMessages(
             <>
               <div className="list-group-item">
@@ -44,10 +45,10 @@ function Message() {
           )
       })
       .catch((err) => {
-        if(err.toJSON){
+        if (err.toJSON) {
           var errJson = err.toJSON()
-          if(errJson.code === "ERR_BAD_REQUEST"){
-            toastr.error("Sesi anda telah habis")
+          if (errJson.code === "ERR_BAD_REQUEST") {
+            toast.current.show({ severity: 'error', detail: 'Sesi anda telah habis' })
             setTimeout(() => window.location.reload(), 2000)
           }
           console.error(errJson)
@@ -58,28 +59,28 @@ function Message() {
   }
 
   const [friends, setFriends] = useState(
-      <>
-        <div className="list-group-item">
-          Mengambil daftar teman
-          <i className='ms-2 fa-solid fa-spin fa-spinner'></i>
-        </div>
-      </>
-    )
+    <>
+      <div className="list-group-item">
+        Mengambil daftar teman
+        <i className='ms-2 fa-solid fa-spin fa-spinner'></i>
+      </div>
+    </>
+  )
 
-  const getFriends = function() {
+  const getFriends = function () {
     return axios.get(apiConfig.FRIENDS, { headers: AccessToken().get() })
       .then((resp) => {
-        if(resp.data.length > 0)
+        if (resp.data.length > 0)
           setFriends(
             <>
-            {resp.data.map(data => (
-              <Link key={data.friend_id} className="list-group-item" to={RoutePath.CHAT}>
-                {data.name}
-              </Link>
-            ))}
+              {resp.data.map(data => (
+                <Link key={data.friend_id} className="list-group-item" to={RoutePath.CHAT}>
+                  {data.name}
+                </Link>
+              ))}
             </>
           )
-        else 
+        else
           setFriends(
             <>
               <div className="list-group-item">
@@ -89,10 +90,10 @@ function Message() {
           )
       })
       .catch((err) => {
-        if(err.toJSON){
+        if (err.toJSON) {
           var errJson = err.toJSON()
-          if(errJson.code === "ERR_BAD_REQUEST"){
-            toastr.error("Sesi anda telah habis")
+          if (errJson.code === "ERR_BAD_REQUEST") {
+            toast.current.show({ severity: 'error', detail: 'Sesi anda telah habis' })
             setTimeout(() => window.location.reload(), 2000)
           }
           console.error(errJson)
@@ -101,9 +102,9 @@ function Message() {
           console.error(err.message)
       })
   }
-  
-  useEffect(function(){
-    if(firstLoad === true){
+
+  useEffect(function () {
+    if (firstLoad === true) {
       setFirstLoad(false)
       getMessages()
       getFriends()
@@ -117,6 +118,7 @@ function Message() {
 
   return (
     <div className='row'>
+      <Toast ref={toast} />
       <div className='col-12 col-md-7'>
         <div className='card shadow-lg'>
           <div className='card-body'>
