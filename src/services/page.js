@@ -1,9 +1,9 @@
-import { useEffect } from 'react'
+import { useEffect, useRef } from 'react'
 import appConfig from '../config/app'
 
 class page {
   setTitle = (newTitle, useHook = true) => {
-    if(useHook)
+    if (useHook)
       useEffect(() => {
         document.getElementsByTagName('title')[0].text = `${appConfig.NAME} | ${newTitle}`
       }, [newTitle])
@@ -18,15 +18,21 @@ class page {
 
   setLoader = (show) => {
     const loader = document.getElementById('loader')
-    if(show){
+    if (show) {
       loader.style.display = 'block'
       loader.classList.add('show')
     }
-    else{
+    else {
       loader.classList.remove('show')
       loader.style.display = 'none'
     }
   }
+}
+
+export const ScrollToBottom = () => {
+  const elementRef = useRef();
+  useEffect(() => elementRef.current.scrollIntoView());
+  return <div ref={elementRef} />;
 }
 
 export default page

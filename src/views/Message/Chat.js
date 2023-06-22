@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import { AccessToken, Auth } from '../../services/cookie';
-import page from '../../services/page'
+import page, { ScrollToBottom } from '../../services/page'
 import axios from 'axios';
 import apiConfig from '../../config/api';
 import toastr from 'reactjs-toastr/lib/react-toast';
@@ -75,6 +75,7 @@ function Chat() {
               </li>
             </>
           )
+
       })
       .catch((err) => {
         if (err.toJSON) {
@@ -139,6 +140,7 @@ function Chat() {
   const [disableButton, setDisableButton] = useState(true)
   const sendMessage = () => {
     if (message.length > 0) {
+      setDisableButton(true)
       axios({
         url: apiConfig.MESSAGES,
         method: "POST",
@@ -151,6 +153,7 @@ function Chat() {
       })
         .then((resp) => {
           setMessage('')
+          getChat()
         })
         .catch((err) => {
           console.log(err)
@@ -186,21 +189,22 @@ function Chat() {
             <div className='card-title'>
               <h3 className='h3 my-auto'>{friendData?.name ?? 'Anonim'}</h3>
             </div>
-            <ul className="list-group">
+            <ul className="list-group" style={{ height: "50vh", overflowY: 'auto' }}>
               {chat}
-              <li className="list-group-item bg-primary">
-                <div className='d-flex'>
-                  <div className='w-100 me-2'>
-                    <input type='text' value={message} onChange={(e) => handleMessage(e.target.value)} className='form-control' />
-                  </div>
-                  <div className='col-auto'>
-                    <button className='btn btn-success' onClick={sendMessage} disabled={disableButton} >
-                      <i className="fa-solid fa-paper-plane"></i>
-                    </button>
-                  </div>
-                </div>
-              </li>
+              <ScrollToBottom />
             </ul>
+          </div>
+          <div className="card-footer bg-primary">
+            <div className='d-flex'>
+              <div className='w-100 me-2'>
+                <input type='text' value={message} onChange={(e) => handleMessage(e.target.value)} className='form-control' />
+              </div>
+              <div className='col-auto'>
+                <button className='btn btn-success' onClick={sendMessage} disabled={disableButton} >
+                  <i className="fa-solid fa-paper-plane"></i>
+                </button>
+              </div>
+            </div>
           </div>
         </div>
       </div>
