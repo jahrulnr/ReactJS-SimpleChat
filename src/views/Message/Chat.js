@@ -6,7 +6,7 @@ import apiConfig from '../../config/api';
 import toastr from 'reactjs-toastr/lib/react-toast';
 import url from '../../services/url'
 import Friend from '../../models/friend';
-import {default as ChatModel} from '../../models/message'
+import { default as ChatModel } from '../../models/message'
 import { RoutePath } from '../../route/route';
 
 function Chat() {
@@ -19,7 +19,7 @@ function Chat() {
   const getFriendData = () => {
     axios.get(`${apiConfig.FRIENDS}/${friend_id}`, { headers: AccessToken().get() })
       .then((resp) => {
-        if(resp.data?.name){
+        if (resp.data?.name) {
           let friend = new Friend()
           friend.set(resp.data)
           setFriendData(friend.get())
@@ -27,9 +27,9 @@ function Chat() {
         }
       })
       .catch((err) => {
-        if(err.toJSON){
+        if (err.toJSON) {
           var errJson = err.toJSON()
-          if(errJson.code === "ERR_BAD_REQUEST"){
+          if (errJson.code === "ERR_BAD_REQUEST") {
             toastr.error("Sesi anda telah habis")
             setTimeout(() => window.location.href = RoutePath.HOME, 2000)
           }
@@ -49,25 +49,25 @@ function Chat() {
     </>
   )
 
-  const getChat = function() {
+  const getChat = function () {
     axios.get(`${apiConfig.MESSAGES}/${friend_id}`, { headers: AccessToken().get() })
       .then((resp) => {
-        if(resp.data.data.length > 0)
+        if (resp.data.data.length > 0)
           setChat(
             <>
-            {resp.data.data.slice().reverse().map((data, i) => {
-              var chat = new ChatModel()
-              chat.set(data)
-              chat = chat.get()
-              return (
-                <li key={i} className="list-group-item">
-                  <div className={chat.from_id === Auth().get().id ? 'text-end': 'text-start'}>{chat.text}</div>
-                </li>
-              )
-            })}
+              {resp.data.data.slice().reverse().map((data, i) => {
+                var chat = new ChatModel()
+                chat.set(data)
+                chat = chat.get()
+                return (
+                  <li key={i} className="list-group-item">
+                    <div className={chat.from_id === Auth().get().id ? 'text-end' : 'text-start'}>{chat.text}</div>
+                  </li>
+                )
+              })}
             </>
           )
-        else 
+        else
           setChat(
             <>
               <li className="list-group-item">
@@ -77,9 +77,9 @@ function Chat() {
           )
       })
       .catch((err) => {
-        if(err.toJSON){
+        if (err.toJSON) {
           var errJson = err.toJSON()
-          if(errJson.code === "ERR_BAD_REQUEST"){
+          if (errJson.code === "ERR_BAD_REQUEST") {
             toastr.error("Sesi anda telah habis")
             setTimeout(() => window.location.href = RoutePath.HOME, 2000)
           }
@@ -91,28 +91,28 @@ function Chat() {
   }
 
   const [friends, setFriends] = useState(
-      <>
-        <li className="list-group-item">
-          Mengambil daftar teman
-          <i className='ms-2 fa-solid fa-spin fa-spinner'></i>
-        </li>
-      </>
-    )
+    <>
+      <li className="list-group-item">
+        Mengambil daftar teman
+        <i className='ms-2 fa-solid fa-spin fa-spinner'></i>
+      </li>
+    </>
+  )
 
-  const getFriends = function() {
+  const getFriends = function () {
     axios.get(apiConfig.FRIENDS, { headers: AccessToken().get() })
       .then((resp) => {
-        if(resp.data.length > 0)
+        if (resp.data.length > 0)
           setFriends(
             <>
-            {resp.data.map(data => (
-              <li key={data.friend_id} className="list-group-item">
-                {data.name}
-              </li>
-            ))}
+              {resp.data.map(data => (
+                <li key={data.friend_id} className="list-group-item">
+                  {data.name}
+                </li>
+              ))}
             </>
           )
-        else 
+        else
           setFriends(
             <>
               <li className="list-group-item">
@@ -122,9 +122,9 @@ function Chat() {
           )
       })
       .catch((err) => {
-        if(err.toJSON){
+        if (err.toJSON) {
           var errJson = err.toJSON()
-          if(errJson.code === "ERR_BAD_REQUEST"){
+          if (errJson.code === "ERR_BAD_REQUEST") {
             toastr.error("Sesi anda telah habis")
             setTimeout(() => window.location.href = RoutePath.HOME, 2000)
           }
@@ -134,9 +134,37 @@ function Chat() {
           console.error(err.message)
       })
   }
-  
-  useEffect(function(){
-    if(firstLoad === true){
+
+  const [message, setMessage] = useState('')
+  const [disableButton, setDisableButton] = useState(true)
+  const sendMessage = () => {
+    if (message.length > 0) {
+      axios({
+        url: apiConfig.MESSAGES,
+        method: "POST",
+        responseType: 'json',
+        data: {
+          to_id: friend_id,
+          message: message
+        },
+        headers: AccessToken().get()
+      })
+        .then((resp) => {
+          setMessage('')
+        })
+        .catch((err) => {
+          console.log(err)
+        })
+    }
+  }
+
+  const handleMessage = (text) => {
+    setDisableButton(!(text.length > 0))
+    setMessage(text)
+  }
+
+  useEffect(() => {
+    if (firstLoad === true) {
       setFirstLoad(false)
       getFriendData()
       getChat()
@@ -146,7 +174,8 @@ function Chat() {
       getChat()
       getFriends()
     }, 1000 * 5)
-    return () => clearInterval(interval)
+
+    return () => { clearInterval(interval) }
   }, [firstLoad, chat, friendData, friends])
 
   return (
@@ -159,6 +188,18 @@ function Chat() {
             </div>
             <ul className="list-group">
               {chat}
+              <li className="list-group-item bg-primary">
+                <div className='d-flex'>
+                  <div className='w-100 me-2'>
+                    <input type='text' value={message} onChange={(e) => handleMessage(e.target.value)} className='form-control' />
+                  </div>
+                  <div className='col-auto'>
+                    <button className='btn btn-success' onClick={sendMessage} disabled={disableButton} >
+                      <i className="fa-solid fa-paper-plane"></i>
+                    </button>
+                  </div>
+                </div>
+              </li>
             </ul>
           </div>
         </div>

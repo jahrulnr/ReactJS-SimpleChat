@@ -38,7 +38,7 @@ export const Auth = () => {
     set: (data) => {
       const user = new User()
       user.set(data)
-      cookie.set('user', user.get(), {  })
+      cookie.set('user', user.get())
     },
 
     remove: () => {

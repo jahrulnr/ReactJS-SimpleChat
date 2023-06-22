@@ -1,7 +1,7 @@
-import React, { useEffect, useState } from "react"
-import { isMobile } from "react-device-detect";
+import React, { useState } from "react"
 import Nav from "./Nav"
 import { Auth } from "../../services/cookie"
+import { Link } from "react-router-dom"
 
 function Layout({ children }) {
   const [showNav, setNav] = useState(false)
@@ -17,7 +17,6 @@ function Layout({ children }) {
 
   return (
     <div className="wrapper">
-
       <div className="card bg-dark">
         <Nav show={showNav} callback={navUpdate} />
       </div>
