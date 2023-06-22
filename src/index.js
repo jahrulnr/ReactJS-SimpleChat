@@ -1,5 +1,7 @@
 import React from 'react';
 import ReactDOM from 'react-dom/client';
+import { Offline, Online } from 'react-detect-offline';
+import { default as OffPage } from './views/Offline'
 import App from './route/route';
 
 // assets for web
@@ -11,5 +13,12 @@ import './assets/css/app.css'
 const root = ReactDOM.createRoot(document.getElementById('app'));
 
 root.render(
-  <App />
+  <>
+    <Online>
+      <App />
+    </Online>
+    <Offline>
+      <OffPage />
+    </Offline>
+  </>
 );

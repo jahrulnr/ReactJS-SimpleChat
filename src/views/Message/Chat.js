@@ -189,6 +189,9 @@ function Chat() {
         })
         .catch((err) => {
           console.log(err)
+          toast.current.show({
+            severity: 'error', detail: 'Tidak dapat mengirim pesan'
+          })
         })
     }
   }

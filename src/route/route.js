@@ -14,12 +14,12 @@ export class RoutePath {
 
 function App() {
   const Page = new page()
-  if(Page.isLoading()){
+  if (Page.isLoading()) {
     Page.setLoader(false)
   }
 
   const auth = Auth()
-  if(!auth.check())
+  if (!auth.check())
     return <Login />
 
   return (
@@ -27,7 +27,7 @@ function App() {
       <Routes>
         <Route path={RoutePath.HOME}>
           <Route index element={<Layout><Message /></Layout>} />
-          <Route path={RoutePath.CHAT+'/*'} element={<Layout><Chat /></Layout>} />
+          <Route path={RoutePath.CHAT + '/*'} element={<Layout><Chat /></Layout>} />
         </Route>
       </Routes>
     </BrowserRouter>
