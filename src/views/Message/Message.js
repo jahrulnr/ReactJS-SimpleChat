@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
-import { AccessToken } from '../../helpers/cookie';
-import page from '../../helpers/page'
+import { AccessToken } from '../../services/cookie';
+import page from '../../services/page'
 import axios from 'axios';
 import apiConfig from '../../config/api';
 import toastr from 'reactjs-toastr/lib/react-toast';

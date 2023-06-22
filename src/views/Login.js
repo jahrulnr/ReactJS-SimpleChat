@@ -1,8 +1,8 @@
 import axios from 'axios'
 import toastr from 'reactjs-toastr/lib/react-toast'
 import { useEffect, useState } from 'react'
-import { AccessToken, Auth } from '../helpers/cookie'
-import page from '../helpers/page'
+import { AccessToken, Auth } from '../services/cookie'
+import page from '../services/page'
 import apiConfig from '../config/api'
 import logo from '../assets/reactjs.png'
 

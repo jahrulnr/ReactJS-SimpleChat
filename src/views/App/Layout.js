@@ -1,8 +1,12 @@
-import React from "react"
+import React, { useState } from "react"
+import { isMobile } from "react-device-detect";
+import { Sidebar } from 'primereact/sidebar';
 import Nav from "./Nav"
-import { Auth } from "../../helpers/cookie"
+import { Auth } from "../../services/cookie"
 
 function Layout({children}) {
+
+  const [showNav, setShowNav] = useState(!isMobile)
 
   const Logout = (e) => {
     Auth().remove()
@@ -12,10 +16,15 @@ function Layout({children}) {
 
   return (
     <div className="wrapper">
-      <Nav />
+
+      <div className="card bg-dark">
+        <Sidebar visible={showNav} onHide={() => setShowNav(false)}>
+          <Nav />
+        </Sidebar>
+      </div>
       <div className="main">
         <nav className="navbar navbar-expand navbar-light navbar-bg">
-          <a className="sidebar-toggle js-sidebar-toggle" href={undefined}>
+          <a className="sidebar-toggle" onClick={() => setShowNav(true)} href={undefined}>
             <i className="hamburger align-self-center"></i>
           </a>
 

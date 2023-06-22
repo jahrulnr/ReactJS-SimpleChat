@@ -1,31 +1,25 @@
-import { Outlet, Link } from "react-router-dom";
-import appConfig from "../../config/app";
+import { Outlet, Link, useNavigate } from "react-router-dom";
 import { RoutePath } from "../../route/route";
+import { PanelMenu } from "primereact/panelmenu";
 
 const Nav = () => {
+  const navigate = useNavigate();
+
   return (
-    <nav id="sidebar" className="sidebar js-sidebar">
-      <div className="sidebar-content js-simplebar">
-        <Link to={RoutePath.HOME} className="sidebar-brand">
-          <span className="align-middle">{appConfig.NAME}</span>
-        </Link>
+    <>
+      <PanelMenu
+        model={[
+          {
+            label: "Home",
+            icon: "fa-solid fa-home",
+            command: () => navigate(RoutePath.HOME),
+          },
+        ]}
+      />
 
-        <ul className="sidebar-nav">
-          <li className="sidebar-header">
-            Menu
-          </li>
-          <li className="sidebar-item">
-            <Link className="sidebar-link" to={RoutePath.HOME}>
-              <i className="align-middle fa-solid fa-envelope"></i> <span
-                className="align-middle">Pesan</span>
-            </Link>
-          </li>
-        </ul>
-
-        <Outlet />
-      </div>
-    </nav>
-  )
+      <Outlet />
+    </>
+  );
 };
 
 export default Nav;

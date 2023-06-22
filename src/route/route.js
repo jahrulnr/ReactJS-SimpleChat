@@ -1,9 +1,9 @@
 
 import { BrowserRouter, Routes, Route } from "react-router-dom";
-import { Auth } from '../helpers/cookie'
+import { Auth } from '../services/cookie'
 import Layout from "../views/App/Layout";
 import Login from "../views/Login";
-import page from "../helpers/page";
+import page from "../services/page";
 import Message from "../views/Message/Message";
 import Chat from "../views/Message/Chat";
 
