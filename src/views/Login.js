@@ -15,16 +15,27 @@ function Login() {
   const [dataForm, setDataForm] = useState({})
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
+  const [disableButton, setDisable] = useState(false)
 
   useEffect(() => {
-    setDataForm({
-      email: email || document.getElementById('email').value,
-      password: password || document.getElementById('password').value
-    })
-  }, [email, password, dataForm])
+    if (
+      email.length > 0
+      && /^[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]+$/i.test(email)
+      && password.length > 5) {
+      setDataForm({
+        email: email || document.getElementById('email').value,
+        password: password || document.getElementById('password').value
+      })
+      setDisable(false)
+    }
+    else
+      setDisable(true)
+
+  }, [email, password])
 
   const doLogin = async (form) => {
     form.preventDefault()
+    setDisable(true)
 
     axios({
       method: 'post',
@@ -48,7 +59,7 @@ function Login() {
       else if (errJson.status !== 204 && errJson.status !== 500) {
         toast.current.show({ severity: 'warn', detail: 'Email/Password tidak benar' });
       }
-    })
+    }).finally(() => setDisable(false))
   }
 
   return (
@@ -79,7 +90,7 @@ function Login() {
                         <input className="form-control form-control-lg" id='password' type="password" ref={(input) => setPassword(input?.value)} onChange={(e) => setPassword(e.target.value)} placeholder="Enter your password" />
                       </div>
                       <div className="d-grid gap-2 mt-3">
-                        <button type='submit' className="btn btn-lg btn-primary">Login</button>
+                        <button type='submit' className="btn btn-lg btn-primary" disabled={disableButton}>Login</button>
                       </div>
                     </form>
                   </div>
