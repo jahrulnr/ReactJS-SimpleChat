@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from 'react';
-import { AccessToken } from '../../services/cookie';
+import { AccessToken, Auth } from '../../services/cookie';
 import page from '../../services/page'
 import axios from 'axios';
 import apiConfig from '../../config/api';
@@ -47,11 +47,21 @@ function Message() {
       .catch((err) => {
         if (err.toJSON) {
           var errJson = err.toJSON()
-          if (errJson.code === "ERR_BAD_REQUEST") {
-            toast.current.show({ severity: 'error', detail: 'Sesi anda telah habis' })
-            setTimeout(() => window.location.reload(), 2000)
+          if (errJson.status === 403 || errJson.status === 401) {
+            Auth().remove()
+            toast.current.show({ severity: 'warn', detail: 'Sesi anda telah habis' })
+            setTimeout(() => window.location.href = RoutePath.HOME, 2000)
           }
-          console.error(errJson)
+          else if (errJson.status === 400) {
+            toast.current.show({
+              severity: 'error', detail: 'Pesan tidak ditemukans'
+            })
+            setTimeout(() => window.location.href = RoutePath.HOME, 2000)
+          }
+          else {
+            toast.current.show({ severity: 'error', detail: 'Server mengalami masalah' })
+            // setTimeout(() => window.location.href = RoutePath.HOME, 1000)
+          }
         }
         else
           console.error(err.message)
@@ -74,7 +84,7 @@ function Message() {
           setFriends(
             <>
               {resp.data.map(data => (
-                <Link key={data.friend_id} className="list-group-item" to={RoutePath.CHAT}>
+                <Link key={data.friend_id} className="list-group-item" to={RoutePath.CHAT + `/${data.friend_id}`}>
                   {data.name}
                 </Link>
               ))}
@@ -92,11 +102,21 @@ function Message() {
       .catch((err) => {
         if (err.toJSON) {
           var errJson = err.toJSON()
-          if (errJson.code === "ERR_BAD_REQUEST") {
-            toast.current.show({ severity: 'error', detail: 'Sesi anda telah habis' })
-            setTimeout(() => window.location.reload(), 2000)
+          if (errJson.status === 403 || errJson.status === 401) {
+            Auth().remove()
+            toast.current.show({ severity: 'warn', detail: 'Sesi anda telah habis' })
+            setTimeout(() => window.location.href = RoutePath.HOME, 2000)
           }
-          console.error(errJson)
+          else if (errJson.status === 400) {
+            toast.current.show({
+              severity: 'error', detail: 'Teman tidak ditemukans'
+            })
+            setTimeout(() => window.location.href = RoutePath.HOME, 2000)
+          }
+          else {
+            toast.current.show({ severity: 'error', detail: 'Server mengalami masalah' })
+            // setTimeout(() => window.location.href = RoutePath.HOME, 1000)
+          }
         }
         else
           console.error(err.message)

@@ -15,6 +15,14 @@ const Nav = ({ show = false, callback }) => {
         callback(false)
       },
     },
+    {
+      label: "Teman",
+      icon: "fa-solid fa-users",
+      command: () => {
+        navigate(RoutePath.SEARCH)
+        callback(false)
+      },
+    },
   ]
 
   return (

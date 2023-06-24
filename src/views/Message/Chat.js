@@ -8,6 +8,7 @@ import Friend from '../../models/friend';
 import { default as ChatModel } from '../../models/message'
 import { RoutePath } from '../../route/route';
 import { Toast } from 'primereact/toast';
+import { Link } from 'react-router-dom';
 
 function Chat() {
   new page().setTitle("Pesan")
@@ -31,7 +32,8 @@ function Chat() {
         if (err.toJSON) {
           var errJson = err.toJSON()
           console.error(errJson)
-          if (errJson.status === 403) {
+          if (errJson.status === 403 || errJson.status === 401) {
+            Auth().remove()
             toast.current.show({ severity: 'warn', detail: 'Sesi anda telah habis' })
             setTimeout(() => window.location.href = RoutePath.HOME, 2000)
           }
@@ -92,9 +94,9 @@ function Chat() {
       .catch((err) => {
         if (err.toJSON) {
           var errJson = err.toJSON()
-          console.error(errJson)
-          if (errJson.status === 403) {
-            toast.current.show({ severity: 'error', detail: 'Sesi anda telah habis' })
+          if (errJson.status === 403 || errJson.status === 401) {
+            Auth().remove()
+            toast.current.show({ severity: 'warn', detail: 'Sesi anda telah habis' })
             setTimeout(() => window.location.href = RoutePath.HOME, 2000)
           }
           else if (errJson.status === 400) {
@@ -132,9 +134,9 @@ function Chat() {
           setFriends(
             <>
               {resp.data.map(data => (
-                <li key={data.friend_id} className="list-group-item">
+                <Link key={data.friend_id} className="list-group-item" to={RoutePath.CHAT + `/${data.friend_id}`}>
                   {data.name}
-                </li>
+                </Link>
               ))}
             </>
           )
@@ -150,8 +152,9 @@ function Chat() {
       .catch((err) => {
         if (err.toJSON) {
           var errJson = err.toJSON()
-          if (errJson.status === 403) {
-            toast.current.show({ severity: 'error', detail: 'Sesi anda telah habis' })
+          if (errJson.status === 403 || errJson.status === 401) {
+            Auth().remove()
+            toast.current.show({ severity: 'warn', detail: 'Sesi anda telah habis' })
             setTimeout(() => window.location.href = RoutePath.HOME, 2000)
           }
           else if (errJson.status === 400) {
@@ -160,7 +163,10 @@ function Chat() {
             })
             setTimeout(() => window.location.href = RoutePath.HOME, 2000)
           }
-          console.error(errJson)
+          else {
+            toast.current.show({ severity: 'error', detail: 'Server mengalami masalah' })
+            setTimeout(() => window.location.href = RoutePath.HOME, 1000)
+          }
         }
         else
           console.error(err.message)
