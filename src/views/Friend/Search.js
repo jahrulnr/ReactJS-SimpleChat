@@ -144,7 +144,7 @@ function Search() {
     else if (status === "1")
       return (
         <Link className='btn btn-success' to={RoutePath.CHAT + `/${friend.get().id}`}>
-          <i class="fa-solid fa-comments" style={{ width: '15px' }}></i>
+          <i className="fa-solid fa-comments" style={{ width: '15px' }}></i>
         </Link>
       )
     else if (status === "0")
