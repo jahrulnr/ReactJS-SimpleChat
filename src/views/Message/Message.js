@@ -60,7 +60,6 @@ function Message() {
           }
           else {
             toast.current.show({ severity: 'error', detail: 'Server mengalami masalah' })
-            // setTimeout(() => window.location.href = RoutePath.HOME, 1000)
           }
         }
         else
@@ -115,7 +114,6 @@ function Message() {
           }
           else {
             toast.current.show({ severity: 'error', detail: 'Server mengalami masalah' })
-            // setTimeout(() => window.location.href = RoutePath.HOME, 1000)
           }
         }
         else

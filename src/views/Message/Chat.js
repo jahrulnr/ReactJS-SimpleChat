@@ -43,13 +43,11 @@ function Chat() {
           }
           else {
             toast.current.show({ severity: 'error', detail: 'Server mengalami masalah' })
-            setTimeout(() => window.location.href = RoutePath.HOME, 1000)
           }
         }
         else {
           console.error(err.message)
           toast.current.show({ severity: 'error', detail: 'Server mengalami masalah' })
-          setTimeout(() => window.location.href = RoutePath.HOME, 1000)
         }
       })
   }
@@ -107,13 +105,11 @@ function Chat() {
           }
           else {
             toast.current.show({ severity: 'error', detail: 'Server mengalami masalah' })
-            setTimeout(() => window.location.href = RoutePath.HOME, 1000)
           }
         }
         else {
           console.error(err.message)
           toast.current.show({ severity: 'error', detail: 'Server mengalami masalah' })
-          setTimeout(() => window.location.href = RoutePath.HOME, 1000)
         }
       })
   }
@@ -165,7 +161,6 @@ function Chat() {
           }
           else {
             toast.current.show({ severity: 'error', detail: 'Server mengalami masalah' })
-            setTimeout(() => window.location.href = RoutePath.HOME, 1000)
           }
         }
         else
