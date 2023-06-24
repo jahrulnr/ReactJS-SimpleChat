@@ -95,7 +95,7 @@ function Search() {
                       {friend.get().name}
                     </div>
                     <div className='my-auto'>
-                      {actionButton(data)}
+                      {actionButton(friend, data.status)}
                     </div>
                   </div>
                 )
@@ -137,14 +137,14 @@ function Search() {
       })
   }
 
-  const actionButton = (data) => {
-    if (data.status === null)
+  const actionButton = (friend, status) => {
+    if (status === null)
       return (
         <button className='btn btn-primary'>
           <i className='fa-solid fa-plus' onClick={() => friendRequest(friend.get().id)}></i>
         </button>
       )
-    else if (data.status === "0")
+    else if (status === "0")
       return (
         <button className='btn btn-success'>
           <i className='fa-solid fa-check' onClick={() => removeFriend(friend.get().id)}></i>
