@@ -137,14 +137,20 @@ function Search() {
   const actionButton = (friend, status) => {
     if (status === null)
       return (
-        <button className='btn btn-primary'>
-          <i className='fa-solid fa-plus' onClick={() => friendRequest(friend.get().id)}></i>
+        <button className='btn btn-primary' onClick={() => friendRequest(friend.get().id)}>
+          <i className='fa-solid fa-plus' style={{ width: '15px' }}></i>
         </button>
+      )
+    else if (status === "1")
+      return (
+        <Link className='btn btn-success' to={RoutePath.CHAT + `/${friend.get().id}`}>
+          <i class="fa-solid fa-comments" style={{ width: '15px' }}></i>
+        </Link>
       )
     else if (status === "0")
       return (
-        <button className='btn btn-success'>
-          <i className='fa-solid fa-check' onClick={() => removeFriend(friend.get().id)}></i>
+        <button className='btn btn-success' onClick={() => removeFriend(friend.get().id)}>
+          <i className='fa-solid fa-check' style={{ width: '15px' }}></i>
         </button>
       )
   }
@@ -185,7 +191,7 @@ function Search() {
   return (
     <div className='row'>
       <Toast ref={toast} />
-      <div className='d-none d-md-block col-md-7'>
+      <div className='col-12 col-md-7'>
         <div className='card shadow-lg'>
           <div className='card-body'>
             <div className='card-title d-flex'>
