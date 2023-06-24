@@ -194,12 +194,13 @@ function Search() {
       <div className='col-12 col-md-7'>
         <div className='card shadow-lg'>
           <div className='card-body'>
-            <div className='card-title d-flex'>
+            <div className='card-title d-flex mb-3'>
               <div className="col-auto my-auto me-2">Cari</div>
               <div className="w-100">
                 <input type="text" className="form-control" onChange={(e) => setSearch(e.target.value)} />
               </div>
             </div>
+            <hr className={friend ? '' : 'd-none'} />
             <div className='list-group'>
               {friend}
             </div>
