@@ -84,10 +84,10 @@ function Search() {
     })
       .then((resp) => {
         if (resp.data.length > 0) {
-          let friend = new Friend()
           setFriend(
             <>
               {resp.data.map(data => {
+                var friend = new Friend()
                 friend.set(data)
                 return (
                   <div key={friend.get().id} className="list-group-item d-flex justify-content-between">
@@ -96,7 +96,7 @@ function Search() {
                       {friend.get().name}
                     </div>
                     <div className='my-auto'>
-                      {actionButton(friend, data.status)}
+                      {actionButton(friend.get(), data.status)}
                     </div>
                   </div>
                 )
@@ -138,19 +138,19 @@ function Search() {
   const actionButton = (friend, status) => {
     if (status === null)
       return (
-        <button className='btn btn-primary' onClick={(e) => friendRequest(e, friend.get().id)}>
+        <button className='btn btn-primary' onClick={(e) => friendRequest(e, friend.id)}>
           <i className='fa-solid fa-plus' style={{ width: '15px' }}></i>
         </button>
       )
     else if (status === "1")
       return (
-        <Link className='btn btn-success' to={RoutePath.CHAT + `/${friend.get().id}`}>
+        <Link className='btn btn-success' to={RoutePath.CHAT + `/${friend.id}`}>
           <i className="fa-solid fa-comments" style={{ width: '15px' }}></i>
         </Link>
       )
     else if (status === "0")
       return (
-        <button className='btn btn-success' onClick={(e) => removeFriend(e, friend.get().id)}>
+        <button className='btn btn-success' onClick={(e) => removeFriend(e, friend.id)}>
           <i className='fa-solid fa-check' style={{ width: '15px' }}></i>
         </button>
       )
@@ -161,6 +161,7 @@ function Search() {
     let icon = element.getElementsByTagName('i')[0]
     console.log(element)
     console.log(icon)
+    console.log(id)
 
     element.classList.remove('btn-primary')
     element.classList.add('btn-success')
@@ -175,8 +176,10 @@ function Search() {
       data: { friend_id: id },
       headers: AccessToken().get()
     }).then(resp => {
+      element.onClick = () => removeFriend(element, id)
       icon.classList.remove('fa-spin', 'fa-circle-notch')
       icon.classList.add('fa-check')
+      searchFriend()
     }).catch(err => {
       element.classList.remove('btn-success')
       element.classList.add('btn-primary')
@@ -231,6 +234,7 @@ function Search() {
       removeEl.classList.add('btn-primary')
       icon.classList.remove('fa-check')
       icon.classList.add('fa-plus')
+      searchFriend()
     }).catch(err => {
       if (err.toJSON) {
         var errJson = err.toJSON()
