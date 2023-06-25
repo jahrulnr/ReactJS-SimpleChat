@@ -1,12 +1,14 @@
 import { useEffect, useRef, useState } from 'react';
+import { Toast } from 'primereact/toast';
+import { Link } from 'react-router-dom';
+import { Dialog } from 'primereact/dialog';
+import { Button } from 'primereact/button';
 import { AccessToken, Auth } from '../../services/cookie';
 import page from '../../services/page'
 import axios from 'axios';
 import apiConfig from '../../config/api';
 import { RoutePath } from '../../route/route';
-import { Toast } from 'primereact/toast';
 import Friend from '../../models/friend';
-import { Link } from 'react-router-dom';
 
 function Search() {
   new page().setTitle("Teman")
@@ -120,8 +122,7 @@ function Search() {
             setTimeout(() => window.location.href = RoutePath.HOME, 2000)
           }
           else if (errJson.status === 400) {
-            toast.current.show({ severity: 'warn', detail: 'Teman tidak ditemukan' })
-            setTimeout(() => window.location.href = RoutePath.HOME, 2000)
+            toast.current.show({ severity: 'warn', detail: 'Permintaan tidak valid' })
           }
           else {
             toast.current.show({ severity: 'error', detail: 'Server mengalami masalah' })
@@ -137,7 +138,7 @@ function Search() {
   const actionButton = (friend, status) => {
     if (status === null)
       return (
-        <button className='btn btn-primary' onClick={() => friendRequest(friend.get().id)}>
+        <button className='btn btn-primary' onClick={(e) => friendRequest(e, friend.get().id)}>
           <i className='fa-solid fa-plus' style={{ width: '15px' }}></i>
         </button>
       )
@@ -149,19 +150,118 @@ function Search() {
       )
     else if (status === "0")
       return (
-        <button className='btn btn-success' onClick={() => removeFriend(friend.get().id)}>
+        <button className='btn btn-success' onClick={(e) => removeFriend(e, friend.get().id)}>
           <i className='fa-solid fa-check' style={{ width: '15px' }}></i>
         </button>
       )
   }
 
-  const friendRequest = (id) => {
+  const friendRequest = (el, id) => {
+    let element = el.target.classList.contains('btn') ? el.target : el.target.parentElement
+    let icon = element.getElementsByTagName('i')[0]
+    console.log(element)
+    console.log(icon)
 
+    element.classList.remove('btn-primary')
+    element.classList.add('btn-success')
+
+    icon.classList.remove('fa-plus')
+    icon.classList.add('fa-spin', 'fa-circle-notch')
+
+    axios({
+      url: apiConfig.FRIEND_REQUESTS,
+      method: 'POST',
+      responseType: 'json',
+      data: { friend_id: id },
+      headers: AccessToken().get()
+    }).then(resp => {
+      icon.classList.remove('fa-spin', 'fa-circle-notch')
+      icon.classList.add('fa-check')
+    }).catch(err => {
+      element.classList.remove('btn-success')
+      element.classList.add('btn-primary')
+
+      icon.classList.remove('fa-spin', 'fa-circle-notch')
+      icon.classList.add('fa-plus')
+
+      if (err.toJSON) {
+        var errJson = err.toJSON()
+        console.error(errJson)
+        if (errJson.status === 403 || errJson.status === 401) {
+          Auth().remove()
+          toast.current.show({ severity: 'warn', detail: 'Sesi anda telah habis' })
+          setTimeout(() => window.location.href = RoutePath.HOME, 2000)
+        }
+        else if (errJson.status === 400) {
+          toast.current.show({ severity: 'warn', detail: 'Teman tidak ditemukan' })
+        }
+        else {
+          toast.current.show({ severity: 'error', detail: 'Server mengalami masalah' })
+        }
+      }
+      else {
+        console.error(err.message)
+        toast.current.show({ severity: 'error', detail: 'Server mengalami masalah' })
+      }
+    })
   }
 
-  const removeFriend = (id) => {
-
+  const [visibleDialog, setVisibleDialog] = useState(false)
+  const [removeId, setRemoveId] = useState(undefined)
+  const [removeEl, setRemoveEl] = useState(undefined)
+  const removeFriend = (el, id) => {
+    setVisibleDialog(true)
+    let element = el.target.classList.contains('btn') ? el.target : el.target.parentElement
+    setRemoveEl(element)
+    setRemoveId(id)
   }
+  const removeAccepted = () => {
+    setVisibleDialog(false)
+    if (removeId === undefined || removeEl === undefined) return;
+    let icon = removeEl.getElementsByTagName('i')[0]
+
+    axios({
+      url: apiConfig.DECLINE_FRIEND_REQUEST,
+      method: 'POST',
+      responseType: 'json',
+      data: { friend_id: removeId },
+      headers: AccessToken().get()
+    }).then(resp => {
+      removeEl.classList.remove('btn-success')
+      removeEl.classList.add('btn-primary')
+      icon.classList.remove('fa-check')
+      icon.classList.add('fa-plus')
+    }).catch(err => {
+      if (err.toJSON) {
+        var errJson = err.toJSON()
+        console.error(errJson)
+        if (errJson.status === 403 || errJson.status === 401) {
+          Auth().remove()
+          toast.current.show({ severity: 'warn', detail: 'Sesi anda telah habis' })
+          setTimeout(() => window.location.href = RoutePath.HOME, 2000)
+        }
+        else if (errJson.status === 400) {
+          toast.current.show({ severity: 'warn', detail: 'Teman tidak ditemukan' })
+        }
+        else {
+          toast.current.show({ severity: 'error', detail: 'Server mengalami masalah' })
+        }
+      }
+      else {
+        console.error(err.message)
+        toast.current.show({ severity: 'error', detail: 'Server mengalami masalah' })
+      }
+    }).finally(() => {
+      setRemoveId(undefined)
+      setRemoveEl(undefined)
+    })
+  }
+  const dialogButton = (
+    <div>
+      <Button label="Tidak" icon="fa-solid fa-times" onClick={() => setVisibleDialog(false)} autoFocus />
+      <Button label="Ya" icon="fa-solid fa-check" onClick={removeAccepted} className="p-button-text" />
+    </div>
+  )
 
   useEffect(() => {
     setTimeout(() => {
@@ -219,6 +319,11 @@ function Search() {
           </div>
         </div>
       </div>
+      <Dialog header="Batalkan Pertemanan" visible={visibleDialog} style={{ width: '50vw' }} onHide={() => setVisibleDialog(false)} footer={dialogButton}>
+        <p className="m-0">
+          Yakin ingin membatalkan pertemanan?
+        </p>
+      </Dialog>
     </div>
   );
 }
