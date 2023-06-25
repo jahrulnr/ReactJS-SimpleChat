@@ -8,13 +8,13 @@ import Friend from '../../models/friend';
 import { default as ChatModel } from '../../models/message'
 import { RoutePath } from '../../route/route';
 import { Toast } from 'primereact/toast';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 
 function Chat() {
   new page().setTitle("Pesan")
   const toast = useRef(null)
 
-  const friend_id = url.parsedPath()[1] ?? false
+  const [friend_id, setFriendId] = useState(url.parsedPath()[1] ?? false)
   const [firstLoad, setFirstLoad] = useState(true)
   const [friendData, setFriendData] = useState({})
 
@@ -123,6 +123,10 @@ function Chat() {
     </>
   )
 
+  const changeChatRoom = (id) => {
+    setFriendId(id)
+    setFirstLoad(true)
+  }
   const getFriends = function () {
     axios.get(apiConfig.FRIENDS, { headers: AccessToken().get() })
       .then((resp) => {
@@ -130,7 +134,7 @@ function Chat() {
           setFriends(
             <>
               {resp.data.map(data => (
-                <Link key={data.friend_id} className="list-group-item" to={RoutePath.CHAT + `/${data.friend_id}`}>
+                <Link key={data.friend_id} className={"list-group-item " + (friend_id * 1 === data.friend_id * 1 ? "bg-primary text-light" : '')} to={RoutePath.CHAT + `/${data.friend_id}`} onClick={() => changeChatRoom(data.friend_id)}>
                   {data.name}
                 </Link>
               ))}
@@ -218,7 +222,7 @@ function Chat() {
 
     return () => { clearInterval(interval) }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [])
+  }, [friend_id])
 
   return (
     <div className='row'>
