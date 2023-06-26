@@ -16,13 +16,9 @@ cp .env.example .env # edit .env
 npm start
 ```
 
-## Fitur yang telah dibuat
+## Screenshoot
 
-- Login
-- Cari Teman (Tambah teman & batalkan request tambah teman)
-- Daftar Teman
-- Daftar Pesan
-- Chat Room
+Silakan lihat di [sini](./SCREENSHOOTS.md)
 
 ## Catatan
 
