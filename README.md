@@ -22,7 +22,7 @@ npm start
 - Cari Teman (Tambah teman & batalkan request tambah teman)
 - Daftar Teman
 - Daftar Pesan
-- Room Chat
+- Chat Room
 
 ## Catatan
 
