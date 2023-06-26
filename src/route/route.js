@@ -1,7 +1,6 @@
 
 import { Routes, Route } from "react-router-dom";
 import { Auth } from '../services/cookie'
-import Layout from "../views/App/Layout";
 import Login from "../views/Login";
 import page from "../services/page";
 import Message from "../views/Message/Message";
@@ -26,11 +25,9 @@ function App() {
 
   return (
     <Routes>
-      <Route path={RoutePath.HOME}>
-        <Route index element={<Layout><Message /></Layout>} />
-        <Route path={RoutePath.SEARCH} element={<Layout><Search /></Layout>} />
-        <Route path={RoutePath.CHAT + '/*'} element={<Layout><Chat /></Layout>} />
-      </Route>
+      <Route path={RoutePath.HOME} index element={<Message />} />
+      <Route path={RoutePath.SEARCH} element={<Search />} />
+      <Route path={RoutePath.CHAT + '/*'} element={<Chat />} />
     </Routes>
   );
 }

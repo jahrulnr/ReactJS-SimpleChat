@@ -8,7 +8,8 @@ import Friend from '../../models/friend';
 import { default as ChatModel } from '../../models/message'
 import { RoutePath } from '../../route/route';
 import { Toast } from 'primereact/toast';
-import { Link, useNavigate } from 'react-router-dom';
+import { Link } from 'react-router-dom';
+import Layout from '../App/Layout';
 
 function Chat() {
   new page().setTitle("Pesan")
@@ -225,46 +226,48 @@ function Chat() {
   }, [friend_id])
 
   return (
-    <div className='row'>
-      <Toast ref={toast} />
-      <div className='col-12 col-md-7'>
-        <div className='card shadow-lg'>
-          <div className='card-body'>
-            <div className='card-title'>
-              <h3 className='h3 my-auto'>{friendData?.name ?? 'Anonim'}</h3>
+    <Layout>
+      <div className='row'>
+        <Toast ref={toast} />
+        <div className='col-12 col-md-7'>
+          <div className='card shadow-lg'>
+            <div className='card-body'>
+              <div className='card-title'>
+                <h3 className='h3 my-auto'>{friendData?.name ?? 'Anonim'}</h3>
+              </div>
+              <ul className="list-group" style={{ height: "50vh", overflowY: 'auto' }}>
+                {chat}
+                <ScrollToBottom />
+              </ul>
             </div>
-            <ul className="list-group" style={{ height: "50vh", overflowY: 'auto' }}>
-              {chat}
-              <ScrollToBottom />
-            </ul>
+            <div className="card-footer bg-primary">
+              <form className='d-flex' method='post' onSubmit={sendMessage}>
+                <div className='w-100 me-2'>
+                  <input type='text' value={message} onChange={(e) => handleMessage(e.target.value)} className='form-control' />
+                </div>
+                <div className='col-auto'>
+                  <button type='submit' className='btn btn-success' disabled={disableButton} >
+                    <i className="fa-solid fa-paper-plane"></i>
+                  </button>
+                </div>
+              </form>
+            </div>
           </div>
-          <div className="card-footer bg-primary">
-            <form className='d-flex' method='post' onSubmit={sendMessage}>
-              <div className='w-100 me-2'>
-                <input type='text' value={message} onChange={(e) => handleMessage(e.target.value)} className='form-control' />
+        </div>
+        <div className='d-none d-md-block col-md-5'>
+          <div className='card shadow-lg'>
+            <div className='card-body'>
+              <div className='card-title'>
+                <h3 className='h3 my-auto'>Daftar Teman</h3>
               </div>
-              <div className='col-auto'>
-                <button type='submit' className='btn btn-success' disabled={disableButton} >
-                  <i className="fa-solid fa-paper-plane"></i>
-                </button>
-              </div>
-            </form>
+              <ul className="list-group">
+                {friends}
+              </ul>
+            </div>
           </div>
         </div>
       </div>
-      <div className='d-none d-md-block col-md-5'>
-        <div className='card shadow-lg'>
-          <div className='card-body'>
-            <div className='card-title'>
-              <h3 className='h3 my-auto'>Daftar Teman</h3>
-            </div>
-            <ul className="list-group">
-              {friends}
-            </ul>
-          </div>
-        </div>
-      </div>
-    </div>
+    </Layout>
   );
 }
 

@@ -9,6 +9,7 @@ import axios from 'axios';
 import apiConfig from '../../config/api';
 import { RoutePath } from '../../route/route';
 import Friend from '../../models/friend';
+import Layout from '../App/Layout';
 
 function Search() {
   new page().setTitle("Teman")
@@ -293,42 +294,44 @@ function Search() {
   }, [search])
 
   return (
-    <div className='row'>
-      <Toast ref={toast} />
-      <div className='col-12 col-md-7'>
-        <div className='card shadow-lg'>
-          <div className='card-body'>
-            <div className='card-title d-flex mb-3'>
-              <div className="col-auto my-auto me-2">Cari</div>
-              <div className="w-100">
-                <input type="text" className="form-control" onChange={(e) => setSearch(e.target.value)} />
+    <Layout>
+      <div className='row'>
+        <Toast ref={toast} />
+        <div className='col-12 col-md-7'>
+          <div className='card shadow-lg'>
+            <div className='card-body'>
+              <div className='card-title d-flex mb-3'>
+                <div className="col-auto my-auto me-2">Cari</div>
+                <div className="w-100">
+                  <input type="text" className="form-control" onChange={(e) => setSearch(e.target.value)} />
+                </div>
+              </div>
+              <hr className={friend ? '' : 'd-none'} />
+              <div className='list-group'>
+                {friend}
               </div>
             </div>
-            <hr className={friend ? '' : 'd-none'} />
-            <div className='list-group'>
-              {friend}
+          </div>
+        </div>
+        <div className='d-none d-md-block col-md-5'>
+          <div className='card shadow-lg'>
+            <div className='card-body'>
+              <div className='card-title'>
+                <h3 className='h3 my-auto'>Daftar Teman</h3>
+              </div>
+              <ul className="list-group">
+                {friends}
+              </ul>
             </div>
           </div>
         </div>
+        <Dialog header="Batalkan Pertemanan" visible={visibleDialog} style={{ width: '50vw' }} onHide={() => setVisibleDialog(false)} footer={dialogButton}>
+          <p className="m-0">
+            Yakin ingin membatalkan pertemanan?
+          </p>
+        </Dialog>
       </div>
-      <div className='d-none d-md-block col-md-5'>
-        <div className='card shadow-lg'>
-          <div className='card-body'>
-            <div className='card-title'>
-              <h3 className='h3 my-auto'>Daftar Teman</h3>
-            </div>
-            <ul className="list-group">
-              {friends}
-            </ul>
-          </div>
-        </div>
-      </div>
-      <Dialog header="Batalkan Pertemanan" visible={visibleDialog} style={{ width: '50vw' }} onHide={() => setVisibleDialog(false)} footer={dialogButton}>
-        <p className="m-0">
-          Yakin ingin membatalkan pertemanan?
-        </p>
-      </Dialog>
-    </div>
+    </Layout>
   );
 }
 

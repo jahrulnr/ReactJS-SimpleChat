@@ -6,6 +6,7 @@ import apiConfig from '../../config/api';
 import { Link } from 'react-router-dom';
 import { RoutePath } from '../../route/route';
 import { Toast } from 'primereact/toast';
+import Layout from '../App/Layout';
 
 function Message() {
   new page().setTitle("Pesan")
@@ -135,33 +136,35 @@ function Message() {
   }, [firstLoad])
 
   return (
-    <div className='row'>
-      <Toast ref={toast} />
-      <div className='col-12 col-md-7'>
-        <div className='card shadow-lg'>
-          <div className='card-body'>
-            <div className='card-title'>
-              <h3 className='h3 my-auto'>Pesan</h3>
+    <Layout>
+      <div className='row'>
+        <Toast ref={toast} />
+        <div className='col-12 col-md-7'>
+          <div className='card shadow-lg'>
+            <div className='card-body'>
+              <div className='card-title'>
+                <h3 className='h3 my-auto'>Pesan</h3>
+              </div>
+              <div className="list-group">
+                {messages}
+              </div>
             </div>
-            <div className="list-group">
-              {messages}
+          </div>
+        </div>
+        <div className='d-none d-md-block col-md-5'>
+          <div className='card shadow-lg'>
+            <div className='card-body'>
+              <div className='card-title'>
+                <h3 className='h3 my-auto'>Daftar Teman</h3>
+              </div>
+              <ul className="list-group">
+                {friends}
+              </ul>
             </div>
           </div>
         </div>
       </div>
-      <div className='d-none d-md-block col-md-5'>
-        <div className='card shadow-lg'>
-          <div className='card-body'>
-            <div className='card-title'>
-              <h3 className='h3 my-auto'>Daftar Teman</h3>
-            </div>
-            <ul className="list-group">
-              {friends}
-            </ul>
-          </div>
-        </div>
-      </div>
-    </div>
+    </Layout>
   );
 }
 
